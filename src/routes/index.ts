@@ -1,5 +1,8 @@
 import { Router } from "express";
-const router = Router();
+import userRoutes from "./user";
+const router: Router = Router();
+
+router.use("/api", userRoutes);
 
 export default router;
 
@@ -14,5 +17,5 @@ export default router;
  * Order Endpoints
  * - PUT /api/users/:userId/orders
  * - GET /api/users/:userId/orders
- * - GET /api/users?:userId/total-price
+ * - GET /api/users/:userId/total-price
  */

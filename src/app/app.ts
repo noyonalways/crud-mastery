@@ -2,11 +2,13 @@ import { Server } from "http";
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import morgan from "morgan";
-import appRoutes from "./routes";
+import baseRoutes from "./routes";
 import { CustomError, ErrorResponse } from "./error";
+import appRoutes from "../routes";
 
 const app: Application = express();
 app.use([morgan("dev")], cors(), express.json());
+app.use(baseRoutes);
 app.use(appRoutes);
 
 // Not found handler
