@@ -22,6 +22,7 @@ router.get("/", (_req: Request, res: Response) => {
 router.get("/status", (_req: Request, res: Response) => {
   res.status(200).json({
     success: true,
+    health: "OK",
     status: 200,
   });
 });

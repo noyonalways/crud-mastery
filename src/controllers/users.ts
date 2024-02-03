@@ -1,6 +1,7 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
+import UserModel from "../models/User";
 
-const getUser: RequestHandler = async (
+export const getUser: RequestHandler = async (
   _req: Request,
   res: Response,
   next: NextFunction
@@ -17,6 +18,17 @@ const getUser: RequestHandler = async (
   }
 };
 
-export = {
-  getUser,
+export const createUser: RequestHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { name, password, fullName, age, email } = req.body;
+    const user = new UserModel();
+
+    res.send();
+  } catch (err) {
+    next(err);
+  }
 };

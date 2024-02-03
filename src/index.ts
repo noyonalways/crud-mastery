@@ -1,8 +1,16 @@
+import "dotenv/config";
 import app from "./app/app";
 import http, { Server } from "http";
-import config from "./configurations/config";
+import env from "./utils/validate-env";
+import mongoose from "mongoose";
+
 const server: Server = http.createServer(app);
-const PORT = config.port ?? 5000;
+const PORT = env.PORT;
+
+mongoose
+  .connect(env.DB_URL)
+  .then(() => console.log("Database connection established"))
+  .catch((err) => console.log(err));
 
 server.listen(PORT, () => {
   console.log(`App is listening on http://localhost:${PORT}`);
