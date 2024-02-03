@@ -9,9 +9,11 @@ const PORT = env.PORT;
 
 mongoose
   .connect(env.DB_URL)
-  .then(() => console.log("Database connection established"))
-  .catch((err) => console.log(err));
+  .then(() => {
+    console.log("Database connection established");
 
-server.listen(PORT, () => {
-  console.log(`App is listening on http://localhost:${PORT}`);
-});
+    server.listen(PORT, () => {
+      console.log(`App is listening on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => console.log(err));

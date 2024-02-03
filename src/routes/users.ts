@@ -5,7 +5,7 @@ const router: Router = Router();
 router
   .route("/users")
   .post(userController.createUser)
-  .get(userController.getUser);
+  .get(userController.getUsers);
 
 router
   .route("/users/:userId")

@@ -1,18 +1,20 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
-import UserModel from "../models/User";
+import { createNewUser, findUsers } from "../services/users";
+import { ErrorResponse } from "../app/error";
+import mongoose from "mongoose";
 
-export const getUser: RequestHandler = async (
+export const getUsers: RequestHandler = async (
   _req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const user: { name: string; email: string } = {
-      name: "Test User",
-      email: "test@email.com",
-    };
-
-    res.status(200).json(user);
+    const users = await findUsers();
+    res.status(200).json({
+      success: true,
+      message: "Users fetched successfully",
+      data: users,
+    });
   } catch (err) {
     next(err);
   }
@@ -24,11 +26,40 @@ export const createUser: RequestHandler = async (
   next: NextFunction
 ) => {
   try {
-    const { name, password, fullName, age, email } = req.body;
-    const user = new UserModel();
+    const { username, password, fullName, age, email, address } = req.body;
 
-    res.send();
-  } catch (err) {
-    next(err);
+    const user = await createNewUser({
+      username,
+      password,
+      fullName,
+      age,
+      email,
+      address,
+    });
+    res.status(201).json({
+      status: true,
+      message: "User created successfully",
+      data: user,
+    });
+  } catch (error) {
+    let customError;
+    if (error instanceof mongoose.Error.ValidationError) {
+      // The validation error occurred
+      const validationErrors = error.errors;
+
+      // Extract and log error messages
+      for (const field of Object.keys(validationErrors)) {
+        const errorMessage = validationErrors[field].message;
+        customError = new ErrorResponse(false, errorMessage, {
+          code: 400,
+          description: errorMessage,
+        });
+      }
+    } else {
+      // Handle other types of errors
+      console.error(error);
+    }
+
+    next(customError);
   }
 };

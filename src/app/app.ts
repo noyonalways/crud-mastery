@@ -28,6 +28,7 @@ app.use(
     res: Response,
     _next: NextFunction
   ): void => {
+    console.log(err);
     const message: string = err.message ? err.message : "Server Error";
     const code: number = err.error?.code || 500;
     const description: string =

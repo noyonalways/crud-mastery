@@ -1,7 +1,7 @@
 import { Schema, model, Document, Types } from "mongoose";
 import { Order } from "./Order";
 
-interface User extends Document {
+export interface User extends Document {
   userId: number;
   username: string;
   password: string;
@@ -21,61 +21,99 @@ interface User extends Document {
   orders: Types.DocumentArray<Order>;
 }
 
-const userSchema = new Schema<User>({
-  userId: {
-    type: Number,
-    required: true,
-  },
-  username: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  fullName: {
-    firstName: {
+const counterSchema = new Schema<{ value: number }>({
+  value: { type: Number, default: 0 },
+});
+
+const CounterModel = model("Counter", counterSchema);
+
+const getNextUserId = async () => {
+  const counter = await CounterModel.findOneAndUpdate(
+    {},
+    { $inc: { value: 1 } },
+    { new: true, upsert: true }
+  );
+  return counter.value;
+};
+
+const userSchema = new Schema<User>(
+  {
+    userId: { type: Number, unique: true },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      // Add a custom error message for unique validation
+      validate: {
+        validator: async function (value: string): Promise<boolean> {
+          const existingUser = await UserModel.findOne({ username: value });
+          if (existingUser) {
+            throw new Error(
+              "Username must be unique. The provided username is already taken."
+            );
+          }
+
+          return true;
+        },
+      },
+    },
+    password: {
       type: String,
       required: true,
     },
-    lastName: {
+    fullName: {
+      firstName: {
+        type: String,
+        required: true,
+      },
+      lastName: {
+        type: String,
+        required: true,
+      },
+    },
+    age: {
+      type: Number,
+      required: true,
+    },
+    email: {
       type: String,
       required: true,
     },
-  },
-  age: {
-    type: Number,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-  },
-  hobbies: {
-    type: [String],
-  },
-  address: {
-    street: {
-      type: String,
+    isActive: {
+      type: Boolean,
+      default: true,
     },
-    city: {
-      type: String,
+    hobbies: {
+      type: [String],
     },
-    country: {
-      type: String,
+    address: {
+      street: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      country: {
+        type: String,
+      },
     },
+    orders: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Order",
+      },
+    ],
   },
-  orders: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Order",
-    },
-  ],
+  {
+    timestamps: true,
+  }
+);
+
+userSchema.pre<User>("save", async function (next) {
+  if (!this.userId) {
+    this.userId = await getNextUserId();
+  }
+  next();
 });
 
 const UserModel = model<User>("User", userSchema);
