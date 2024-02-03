@@ -1,4 +1,3 @@
-import { Server } from "http";
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import morgan from "morgan";
