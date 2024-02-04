@@ -1,5 +1,6 @@
 import { Schema, model, Document, Types } from "mongoose";
 import { Order } from "./Order";
+import bcrypt from "bcryptjs";
 
 export interface User extends Document {
   userId: number;
@@ -68,7 +69,6 @@ const userSchema = new Schema<User>(
       },
       lastName: {
         type: String,
-        required: true,
       },
     },
     age: {
@@ -78,6 +78,16 @@ const userSchema = new Schema<User>(
     email: {
       type: String,
       required: true,
+      unique: true,
+      validate: {
+        validator: async function (value: string): Promise<boolean> {
+          const existingUser = await UserModel.findOne({ email: value });
+          if (existingUser) {
+            throw new Error("User already Exist");
+          }
+          return true;
+        },
+      },
     },
     isActive: {
       type: Boolean,
@@ -112,6 +122,22 @@ const userSchema = new Schema<User>(
 userSchema.pre<User>("save", async function (next) {
   if (!this.userId) {
     this.userId = await getNextUserId();
+  }
+  next();
+});
+
+userSchema.pre<User>("save", async function (next) {
+  // Hash the password only if it is modified or new
+  if (this.isModified("password") || this.isNew) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(this.password, salt);
+      this.password = hashedPassword;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      // Explicitly specify the type of error
+      return next(error);
+    }
   }
   next();
 });

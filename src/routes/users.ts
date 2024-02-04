@@ -9,9 +9,9 @@ router
 
 router
   .route("/users/:userId")
-  .get(() => {})
-  .put(() => {})
-  .delete(() => {});
+  .get(userController.getUserByProperty)
+  .put(userController.updateUserInfoPut)
+  .delete(userController.deleteUserByUserId);
 
 router
   .route("/users/:userId/orders")

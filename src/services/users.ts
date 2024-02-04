@@ -1,3 +1,4 @@
+import { ErrorResponse } from "../app/error";
 import UserModel from "../models/User";
 
 interface CreateUserProperties {
@@ -21,6 +22,7 @@ interface CreateUserProperties {
       quantity: number;
     }
   ];
+  hobbies?: [string];
 }
 
 export const createNewUser = (userInput: CreateUserProperties) => {
@@ -52,4 +54,26 @@ export const findUserByProperty = (key: string, value: string | number) => {
 
 export const findUsers = () => {
   return UserModel.find();
+};
+
+export const updateUserPut = async (
+  userId: number | string,
+  data: CreateUserProperties
+) => {
+  const user = await findUserByProperty("email", data.email);
+  if (user) {
+    const customError = new ErrorResponse(false, "Email already in use", {
+      code: 400,
+      description: "Email already in use",
+    });
+    throw customError;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userWithId: any = await findUserByProperty("userId", userId);
+
+  return UserModel.findByIdAndUpdate(
+    userWithId._id,
+    { ...data },
+    { new: true }
+  );
 };
