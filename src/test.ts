@@ -1,7 +1,6 @@
 import { z } from "zod";
-import Joi from "joi";
 const _z = z;
-/* const zodSchema = z.object({
+const zodSchema = z.object({
   name: z.string(),
   email: z.string(),
   password: z.string(),
@@ -18,23 +17,22 @@ const data: User = {
 };
 
 console.log(zodSchema.safeParse(data));
- */
 
-const joiSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  password: Joi.string().required(),
-  confirmPassword: Joi.ref("password"),
-  birthday: Joi.string().required(),
-});
+// const joiSchema = Joi.object({
+//   name: Joi.string().required(),
+//   email: Joi.string().required(),
+//   password: Joi.string().required(),
+//   confirmPassword: Joi.ref("password"),
+//   birthday: Joi.string().required(),
+// });
 
-const user = {
-  name: "Noyon Rahman",
-  email: "noyonrahman.dev@gmail.com",
-  password: "pass123",
-  confirmPassword: "pass123",
-  birthday: 1255,
-};
+// const user = {
+//   name: "Noyon Rahman",
+//   email: "noyonrahman.dev@gmail.com",
+//   password: "pass123",
+//   confirmPassword: "pass123",
+//   birthday: 1255,
+// };
 
-const { error, value } = joiSchema.validate(user, { abortEarly: false });
-console.log(value, error);
+// const { error, value } = joiSchema.validate(user, { abortEarly: false });
+// console.log(value, error);

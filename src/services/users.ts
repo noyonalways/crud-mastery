@@ -1,5 +1,6 @@
 import { ErrorResponse } from "../app/error";
 import UserModel from "../models/User";
+import { UserProperties } from "../validation/users";
 
 interface CreateUserProperties {
   username: string;
@@ -25,7 +26,7 @@ interface CreateUserProperties {
   hobbies?: [string];
 }
 
-export const createNewUser = (userInput: CreateUserProperties) => {
+export const createNewUser = (userInput: UserProperties) => {
   const user = new UserModel({
     username: userInput.username,
     password: userInput.password,
@@ -58,7 +59,7 @@ export const findUsers = () => {
 
 export const updateUserPut = async (
   userId: number | string,
-  data: CreateUserProperties
+  data: UserProperties
 ) => {
   const user = await findUserByProperty("email", data.email);
   if (user) {

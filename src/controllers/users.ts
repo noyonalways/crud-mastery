@@ -8,6 +8,7 @@ import {
 import { ErrorResponse } from "../app/error";
 import mongoose from "mongoose";
 import { User } from "../models/User";
+import UserValidationSchema from "../validation/users";
 
 export const getUsers: RequestHandler = async (
   _req: Request,
@@ -52,13 +53,29 @@ export const createUser: RequestHandler = async (
   try {
     const { username, password, fullName, age, email, address } = req.body;
 
-    const user = (await createNewUser({
+    const validationData = await UserValidationSchema.safeParse({
       username,
       password,
       fullName,
       age,
       email,
       address,
+    });
+
+    if (!validationData.success) {
+      const customError = new ErrorResponse(
+        false,
+        validationData.error.issues[0].message,
+        {
+          code: 400,
+          description: validationData.error.issues[0].message,
+        }
+      );
+
+      return res.status(400).json(customError);
+    }
+    const user = (await createNewUser({
+      ...validationData.data,
     })) as Partial<User>;
 
     user.password = undefined;
