@@ -1,4 +1,21 @@
-# Mongoose Express CRUD Mastery
+<img style='border-radius: 10px;' src='https://bs-uploads.toptal.io/blackfish-uploads/components/blog_post_page/content/cover_image_file/cover_image/1315474/regular_1708x683_0405_Building_a_Node.js-TypeScript_REST_API_Zara_Newsletter___blog-1507ad3436895bfe7cc6cf35e4efb17f.png' width='100%' alt='banner-image'>
+
+<div align="center" style='margin: 5px 0px'>
+  <a href='https://github.com/noyonalways/crud-mastery/fork'>
+    <img src='https://img.shields.io/badge/-Fork%20Repo-black.svg?style=flat-square&logo=github&color=555&logoColor=white' alt='fork-repo'>
+  </a>
+  <a href='https://github.com/noyonalways/crud-mastery'>
+    <img src='https://img.shields.io/badge/⭐%20Star%20Repo-gray' alt='star-repo'>
+  </a>
+  <img src="https://img.shields.io/github/contributors/noyonalways/crud-mastery" alt="github-contributors" >
+  <img src="https://img.shields.io/github/stars/noyonalways/crud-mastery?style=flat" alt="github-repo-stars">
+  <img src='https://img.shields.io/github/forks/noyonalways/crud-mastery?style=flat' alt='forks-repo'>
+  <img src='https://img.shields.io/github/followers/noyonalways?style=flat' alt='github-followers'>
+  <img src='https://img.shields.io/github/directory-file-count/noyonalways/crud-mastery' alt='repo-files-count'>
+  <img src="https://img.shields.io/github/repo-size/noyonalways/crud-mastery" alt='repo-size'>
+</div>
+
+<h1 align='center'>Mongoose Express CRUD Mastery</h1>
 
 **Objective:** Develop a Node.js Express application with TypeScript as the programming language, integrating MongoDB with Mongoose for user data and order management. Ensure data integrity through validation using Joi/Zod.
 
@@ -308,15 +325,28 @@ If the 'orders' property already exists for a user, append a new product to it. 
    - Consider using linting tools (e.g., ESLint) to enforce coding style and identify potential issues.
    - Ensure there are at least 10 commits in your GitHub repository.
 
-**_Not following the specified API endpoint structure, naming conventions, and other instructions will result in a deduction of marks._**
+### Connect with me
 
-### **Submission:**
-
-- Share the GitHub repository link and the live deployment link as part of your submission.
-- Include a README file with clear instructions on how to run the application locally.
-
-### **Deadline:**
-
-- 60 marks: November 24, 2023, 11:59 PM
-- 50 marks: November 25, 2023, 11:59 PM
-- 30 marks: After 25, November, 11.59PM
+<div align="center">
+  <a target="_blank" href="https://facebook.com/noyonalways">
+    <img src="https://img.shields.io/badge/-noyonalways-1877F2?style=flat-square&labelColor=1877F2&logo=facebook&logoColor=white" alt="Facebook Badge">
+  </a>
+  <a target="_blank" href="https://instagram.com/noyonalways">
+    <img src="https://img.shields.io/badge/-noyonalways-E4405F?style=flat-square&labelColor=E4405F&logo=instagram&logoColor=white" alt="Instagram Badge">
+  </a>
+  <a target="_blank" href="https://linkedin.com/company/noyonalways/">
+    <img src="https://img.shields.io/badge/-noyonalways-blue?style=flat-square&logo=Linkedin&logoColor=white" alt="LinkedIn Badge">
+  </a>
+  <a target="_blank" href="mailto:noyonalways+github@gmail.com">
+    <img src="https://img.shields.io/badge/-Email-c14438?style=flat-square&logo=Gmail&logoColor=white" alt="Email Badge">
+  </a>
+  <a target="_blank" href="https://behance.net/noyonalways">
+    <img src="https://img.shields.io/badge/-noyonalways-gray?style=flat-square&logo=Behance&logoColor=white" alt="YouTube Badge">
+  </a>
+  <a target="_blank" href="https://dev.to/noyonalways">
+    <img src="https://img.shields.io/badge/-noyonalways-black?style=flat-square&logo=dev.to&logoColor=white" alt="YouTube Badge">
+  </a>
+  <a target="_blank" href="https://youtube.com/@deskofnoyon">
+    <img src="https://img.shields.io/badge/-deskofnoyon-CD201F?style=flat-square&logo=YouTube&logoColor=white" alt="YouTube Badge">
+  </a>
+</div>
