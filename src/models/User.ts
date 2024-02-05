@@ -37,6 +37,19 @@ const getNextUserId = async () => {
   return counter.value;
 };
 
+export type TOrder = {
+  productName?: string;
+  price?: number;
+  quantity?: number;
+};
+
+//create order schema
+const OrderSchema = new Schema<TOrder>({
+  productName: { type: String },
+  price: { type: Number, min: 0 },
+  quantity: { type: Number, min: 1 },
+});
+
 const userSchema = new Schema<User>(
   {
     userId: { type: Number, unique: true },
@@ -107,12 +120,10 @@ const userSchema = new Schema<User>(
         type: String,
       },
     },
-    orders: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Order",
-      },
-    ],
+    orders: {
+      type: [OrderSchema],
+      required: false,
+    },
   },
   {
     timestamps: true,

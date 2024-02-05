@@ -44,8 +44,6 @@ export const createUser: RequestHandler = async (
       ...userData,
     });
 
-    console.log(validationData);
-
     if (!validationData.success) {
       const customError = new ErrorResponse(
         false,

@@ -1,5 +1,5 @@
 import { ErrorResponse } from "../app/error";
-import UserModel from "../models/User";
+import UserModel, { TOrder } from "../models/User";
 import {
   UpdateUserValidationProperties,
   UserValidationProperties,
@@ -62,6 +62,19 @@ export const updateUserPut = async (
 
   // Exclude the password from the returned user
   const { password, ...userWithoutPassword } = updatedUser.toObject();
-
   return userWithoutPassword;
+};
+
+export const addOrderIntoDB = (userId: number, orderData: TOrder) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result: any = UserModel.updateOne(
+    { userId: userId },
+    { $push: { orders: { ...orderData } } }
+  );
+  return result;
+};
+
+export const getOrderFromDB = (userId: number) => {
+  const result = UserModel.findOne({ userId }, { orders: 1 });
+  return result;
 };
