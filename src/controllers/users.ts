@@ -21,28 +21,10 @@ export const getUsers: RequestHandler = async (
 ) => {
   try {
     const users: User[] = await findUsers();
-
-    // Create a new array with users excluding the password
-    const usersWithoutPassword = users.map((user) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {
-        password,
-        createdAt,
-        updatedAt,
-        hobbies,
-        orders,
-        isActive,
-        __v,
-        _id,
-        ...userWithoutPassword
-      } = user.toObject();
-      return userWithoutPassword;
-    });
-
     res.status(200).json({
       success: true,
       message: "Users fetched successfully",
-      data: usersWithoutPassword,
+      data: users,
     });
   } catch (err) {
     next(err);
