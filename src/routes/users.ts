@@ -1,4 +1,4 @@
-import { addOrder } from "../controllers/orders";
+import { addOrder, getOrders, getTotalPrice } from "../controllers/orders";
 import * as userController from "./../controllers/users";
 import { Router } from "express";
 const router: Router = Router();
@@ -8,10 +8,7 @@ router
   .post(userController.createUser)
   .get(userController.getUsers);
 
-router
-  .route("/users/:userId/orders")
-  .put(addOrder)
-  .get(() => {});
+router.route("/users/:userId/orders").put(addOrder).get(getOrders);
 
 router
   .route("/users/:userId")
@@ -19,5 +16,5 @@ router
   .put(userController.updateUserInfoPut)
   .delete(userController.deleteUserByUserId);
 
-router.route("/users/:userId/total-price").get(() => {});
+router.route("/users/:userId/total-price").get(getTotalPrice);
 export default router;

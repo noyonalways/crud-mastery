@@ -25,7 +25,7 @@ export const findUserByProperty = (
 export const findUsers = () => {
   return UserModel.find(
     {},
-    { password: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    { password: 0, __v: 0, createdAt: 0, updatedAt: 0, orders: 0 }
   );
 };
 
@@ -61,6 +61,7 @@ export const updateUserPut = async (
   );
 
   // Exclude the password from the returned user
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password, ...userWithoutPassword } = updatedUser.toObject();
   return userWithoutPassword;
 };
@@ -77,4 +78,26 @@ export const addOrderIntoDB = (userId: number, orderData: TOrder) => {
 export const getOrderFromDB = (userId: number) => {
   const result = UserModel.findOne({ userId }, { orders: 1 });
   return result;
+};
+
+export const getTotalPriceFromDB = async (userId: number) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const result: any = await UserModel.aggregate([
+    {
+      $match: { userId: Number(userId) },
+    },
+    {
+      $unwind: "$orders",
+    },
+    {
+      $group: {
+        _id: null,
+        totalPrice: {
+          $sum: { $multiply: ["$orders.price", "$orders.quantity"] },
+        },
+      },
+    },
+  ]).exec();
+
+  return result[0].totalPrice;
 };

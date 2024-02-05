@@ -1,5 +1,4 @@
-import { Schema, model, Document, Types } from "mongoose";
-import { Order } from "./Order";
+import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcryptjs";
 
 export interface User extends Document {
@@ -19,7 +18,14 @@ export interface User extends Document {
     city: string;
     country: string;
   };
-  orders: Types.DocumentArray<Order>;
+  orders?: [
+    {
+      productName: string;
+      price: number;
+      quantity: number;
+    }
+  ];
+  totalPrice?: number;
 }
 
 const counterSchema = new Schema<{ value: number }>({
