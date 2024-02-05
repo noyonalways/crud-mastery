@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const UserValidationSchema = z.object({
+export const UserValidationSchema = z.object({
   userId: z.string().optional(),
   username: z
     .string()
@@ -24,8 +24,33 @@ const UserValidationSchema = z.object({
   age: z.number(),
   email: z.string().email(),
   isActive: z.boolean().optional(),
-  hobbies: z.array(z.string().min(1).max(30)).optional(),
+  hobbies: z.array(z.string().max(30)).optional(),
 });
 
-export type UserProperties = z.infer<typeof UserValidationSchema>;
-export default UserValidationSchema;
+export type UserValidationProperties = z.infer<typeof UserValidationSchema>;
+
+export const UpdateUserValidationSchema = z.object({
+  username: z.string().optional(),
+  password: z.string().optional(),
+  fullName: z
+    .object({
+      firstName: z.string().optional(),
+      lastName: z.string().optional(),
+    })
+    .optional(),
+  address: z
+    .object({
+      street: z.string().optional(),
+      city: z.string().optional(),
+      country: z.string().optional(),
+    })
+    .optional(),
+  age: z.number().optional(),
+  email: z.string().email().optional(),
+  isActive: z.boolean().optional(),
+  hobbies: z.array(z.string().max(30)).optional(),
+});
+
+export type UpdateUserValidationProperties = z.infer<
+  typeof UpdateUserValidationSchema
+>;

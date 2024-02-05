@@ -1,52 +1,21 @@
 import { ErrorResponse } from "../app/error";
 import UserModel from "../models/User";
-import { UserProperties } from "../validation/users";
+import {
+  UpdateUserValidationProperties,
+  UserValidationProperties,
+} from "../validation/users";
 
-interface CreateUserProperties {
-  username: string;
-  password: string;
-  fullName: {
-    firstName: string;
-    lastName: string;
-  };
-  age: number;
-  email: string;
-  address?: {
-    street: string;
-    city: string;
-    country: string;
-  };
-  orders?: [
-    {
-      productName: string;
-      price: number;
-      quantity: number;
-    }
-  ];
-  hobbies?: [string];
-}
-
-export const createNewUser = (userInput: UserProperties) => {
-  const user = new UserModel({
-    username: userInput.username,
-    password: userInput.password,
-    fullName: {
-      firstName: userInput.fullName.firstName,
-      lastName: userInput.fullName.lastName,
-    },
-    age: userInput.age,
-    email: userInput.email,
-    address: {
-      street: userInput.address?.street,
-      city: userInput.address?.city,
-      country: userInput.address?.country,
-    },
-  });
-
+// Create a new user
+export const createNewUser = (userInput: UserValidationProperties) => {
+  const user = new UserModel({ ...userInput });
   return user.save();
 };
 
-export const findUserByProperty = (key: string, value: string | number) => {
+// Find upser by property
+export const findUserByProperty = (
+  key: string,
+  value: string | number | undefined
+) => {
   if (key === "_id") {
     return UserModel.findById(value);
   }
@@ -57,9 +26,10 @@ export const findUsers = () => {
   return UserModel.find();
 };
 
+// Updater user
 export const updateUserPut = async (
   userId: number | string,
-  data: UserProperties
+  data: UpdateUserValidationProperties
 ) => {
   const user = await findUserByProperty("email", data.email);
   if (user) {
@@ -71,10 +41,24 @@ export const updateUserPut = async (
   }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const userWithId: any = await findUserByProperty("userId", userId);
+  if (!userWithId) {
+    const customError = new ErrorResponse(false, "User not found", {
+      code: 404,
+      description: "User not found",
+    });
+    throw customError;
+  }
 
-  return UserModel.findByIdAndUpdate(
+  // Update the user's information, excluding the password
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updatedUser: any = await UserModel.findByIdAndUpdate(
     userWithId._id,
     { ...data },
     { new: true }
   );
+
+  // Exclude the password from the returned user
+  const { password, ...userWithoutPassword } = updatedUser.toObject();
+
+  return userWithoutPassword;
 };

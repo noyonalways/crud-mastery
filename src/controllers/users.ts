@@ -1,3 +1,7 @@
+import {
+  UpdateUserValidationSchema,
+  UserValidationSchema,
+} from "./../validation/users";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import {
   createNewUser,
@@ -8,8 +12,8 @@ import {
 import { ErrorResponse } from "../app/error";
 import mongoose from "mongoose";
 import { User } from "../models/User";
-import UserValidationSchema from "../validation/users";
 
+// Get all users
 export const getUsers: RequestHandler = async (
   _req: Request,
   res: Response,
@@ -45,22 +49,20 @@ export const getUsers: RequestHandler = async (
   }
 };
 
+// Create user
 export const createUser: RequestHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { username, password, fullName, age, email, address } = req.body;
+    const userData = req.body;
 
     const validationData = await UserValidationSchema.safeParse({
-      username,
-      password,
-      fullName,
-      age,
-      email,
-      address,
+      ...userData,
     });
+
+    console.log(validationData);
 
     if (!validationData.success) {
       const customError = new ErrorResponse(
@@ -74,6 +76,7 @@ export const createUser: RequestHandler = async (
 
       return res.status(400).json(customError);
     }
+
     const user = (await createNewUser({
       ...validationData.data,
     })) as Partial<User>;
@@ -108,6 +111,7 @@ export const createUser: RequestHandler = async (
   }
 };
 
+// Get user by userId
 export const getUserByProperty: RequestHandler = async (
   req: Request,
   res: Response,
@@ -136,6 +140,7 @@ export const getUserByProperty: RequestHandler = async (
   }
 };
 
+// Updater user by userId PUT Request
 export const updateUserInfoPut: RequestHandler = async (
   req: Request,
   res: Response,
@@ -143,17 +148,26 @@ export const updateUserInfoPut: RequestHandler = async (
 ) => {
   try {
     const { userId } = req.params;
-    const { username, password, fullName, age, email, address, hobbies } =
-      req.body;
-    const user = await updateUserPut(userId, {
-      username,
-      password,
-      fullName,
-      age,
-      email,
-      address,
-      hobbies,
+    const userUpdateInfo = req.body;
+
+    const validationData = await UpdateUserValidationSchema.safeParse({
+      ...userUpdateInfo,
     });
+
+    if (!validationData.success) {
+      const customError = new ErrorResponse(
+        false,
+        validationData.error.issues[0].message,
+        {
+          code: 400,
+          description: validationData.error.issues[0].message,
+        }
+      );
+      return res.status(400).json(customError);
+    }
+
+    const user = await updateUserPut(userId, { ...validationData.data });
+
     if (!user) {
       const customError = new ErrorResponse(false, "Not found", {
         code: 404,
@@ -172,6 +186,7 @@ export const updateUserInfoPut: RequestHandler = async (
   }
 };
 
+// Delete user by userId
 export const deleteUserByUserId: RequestHandler = async (
   req: Request,
   res: Response,
